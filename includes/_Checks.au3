@@ -42,7 +42,7 @@ Func _CPUNameCheck($sCPU)
 		Return False
 	Else
 		$iLines = _FileCountLines(@LocalAppDataDir & $ListFile)
-		If @error Then Return SetError(1, 0, 0)
+		If @error Then Return SetError(1, 0, False)
 		For $iLine = 1 To $iLines Step 1
 			$sLine = FileReadLine(@LocalAppDataDir & $ListFile, $iLine)
 			Select
@@ -113,18 +113,17 @@ Func _GetDirectXCheck($aArray)
 	EndIf
 EndFunc   ;==>_GetDirectXCheck
 
-Func _GPTCheck()
-	Local $aDisks = _GetDiskInfo(1)
-	Switch _GetDiskInfo(0)
-		Case "GPT"
-			If $aDisks[0] = $aDisks[1] Then
-				Return True
-			Else
-				SetError($aDisks[1], $aDisks[0], True)
-			EndIf
-		Case Else
-			Return False
-	EndSwitch
+Func _GPTCheck($aDisks)
+	For $iLoop = 0 To UBound($aDisks) - 1
+		If $aDisks[$iLoop][11] = "True" Then
+			Switch $aDisks[$iLoop][9]
+				Case "GPT"
+					Return True
+				Case Else
+					Return SetError($aDisks[$iLoop][9], 0, False)
+			EndSwitch
+		EndIf
+	Next
 EndFunc   ;==>_GPTCheck
 
 Func _MemCheck()
