@@ -19,13 +19,13 @@ jobs:
       - name: Download tools
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          curl -sSfLO https://www.autoitscript.com/autoit3/mvps/mLipok/AutoItPortable_GitHub_CI_Version.zip
+          curl -sSfLO https://www.autoitscript.com/autoit3/mvps/mLipok/AutoItPortableCI.zip
           Expand-Archive AutoItPortable_GitHub_CI_Version.zip "${env:ProgramFiles(x86)}"
       - name: Install tools
         run: |
       - name: Compile
         run: |
-          Start-Process "${env:ProgramFiles(x86)}\AutoItPortable_GitHub_CI_Version\AutoIt3.exe" "`"${env:ProgramFiles(x86)}\AutoItPortable_GitHub_CI_Version\SciTE\AutoIt3Wrapper\AutoIt3Wrapper.au3`" /NoStatus /prod /in WhyNotWin11.au3" -NoNewWindow -Wait
+          Start-Process "${env:ProgramFiles(x86)}\AutoItPortableCI\AutoIt3.exe" "`"${env:ProgramFiles(x86)}\AutoItPortableCI\SciTE\AutoIt3Wrapper\AutoIt3Wrapper.au3`" /NoStatus /prod /in WhyNotWin11.au3" -NoNewWindow -Wait
           sha256sum -b WhyNotWin*.exe > checksums.sha256
       - uses: actions/upload-artifact@v2
         with:
