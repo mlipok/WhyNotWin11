@@ -19,8 +19,8 @@
 #AutoIt3Wrapper_Res_Icon_Add=Assets\set.ico
 #AutoIt3Wrapper_Run_AU3Check=Y
 #AutoIt3Wrapper_Au3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7 -v1 -v2 -v3
-#AutoIt3Wrapper_Run_Au3Stripper=y
-#Au3Stripper_Parameters=/so
+#AutoIt3Wrapper_Run_Au3Stripper=Y
+#Au3Stripper_Parameters=/so /showconsoleinfo=0
 #AutoIt3Wrapper_Run_Tidy=Y
 #Tidy_Parameters=/reel /showconsoleinfo=0
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
