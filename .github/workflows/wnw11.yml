@@ -12,7 +12,6 @@ jobs:
         id: cache
         with:
           path: |
-            AutoItPortableCI.zip
             C:\Program Files (x86)\AutoItPortableCI
           key: v2
       - name: Download tools
