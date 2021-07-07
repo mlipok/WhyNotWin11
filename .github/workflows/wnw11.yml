@@ -12,15 +12,14 @@ jobs:
         id: cache
         with:
           path: |
-            autoit-v3-setup.exe
-            SciTE4AutoIt3.exe
-            C:\Program Files (x86)\AutoIt3\SciTE\Au3Stripper
+            AutoItPortableCI.zip
+            C:\Program Files (x86)\AutoItPortableCI
           key: v2
       - name: Download tools
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           curl -sSfLO https://www.autoitscript.com/autoit3/mvps/mLipok/AutoItPortableCI.zip
-          Expand-Archive AutoItPortable_GitHub_CI_Version.zip "${env:ProgramFiles(x86)}"
+          Expand-Archive AutoItPortableCI.zip "${env:ProgramFiles(x86)}"
       - name: Install tools
         run: |
       - name: Compile
