@@ -1,4 +1,4 @@
-2.3.0.4
+2.4.0.0
 Atom(R) x6200FE
 Atom(R) x6211E
 Atom(R) x6212RE
@@ -48,6 +48,16 @@ Celeron(R) N5100
 Celeron(R) N5105
 Celeron(R) 6305
 Celeron(R) 6305E
+Core(TM) i5-7640X
+Core(TM) i7-7740X
+Core(TM) i7-7800X
+Core(TM) i7-7820HQ
+Core(TM) i7-7820X
+Core(TM) i9-7900X
+Core(TM) i9-7920X
+Core(TM) i9-7940X
+Core(TM) i9-7960X
+Core(TM) i9-7980XE
 Core(TM) i5-10210Y
 Core(TM) i5-10310Y
 Core(TM) i5-8200Y
@@ -65,8 +75,8 @@ Core(TM) i3-8140U
 Core(TM) i3-8300
 Core(TM) i3-8300T
 Core(TM) i3-8350K
-Core(TM) i5+8400
-Core(TM) i5+8500
+Core(TM) i5-8400
+Core(TM) i5-8500
 Core(TM) i5-8257U
 Core(TM) i5-8259U
 Core(TM) i5-8260U
@@ -92,6 +102,7 @@ Core(TM) i7-8700B
 Core(TM) i7-8700K
 Core(TM) i7-8700T
 Core(TM) i7-8750H
+Core(TM) i7-8809G
 Core(TM) i7-8850H
 Core(TM) i3-8130U
 Core(TM) i5-8250U
@@ -141,6 +152,7 @@ Core(TM) i7-9700T
 Core(TM) i7-9700TE
 Core(TM) i7-9750H
 Core(TM) i7-9750HF
+Core(TM) i7-9800X
 Core(TM) i7-9850H
 Core(TM) i7-9850HE
 Core(TM) i7-9850HL
@@ -151,6 +163,10 @@ Core(TM) i9-9900K
 Core(TM) i9-9900KF
 Core(TM) i9-9900KS
 Core(TM) i9-9900T
+Core(TM) i9-9900X
+Core(TM) i9-9920X
+Core(TM) i9-9940X
+Core(TM) i9-9960X
 Core(TM) i9-9980HK
 Core(TM) i3-10100Y
 Core(TM) i3-10110Y
@@ -282,12 +298,38 @@ Pentium(R) CPU G5500T
 Pentium(R) CPU G5600
 Pentium(R) CPU G5600T
 Pentium(R) CPU G5620
+Pentium(R) Gold 4425Y
+Pentium(R) Gold 6500Y
+Pentium(R) Gold G5400
+Pentium(R) Gold G5400T
+Pentium(R) Gold G5420
+Pentium(R) Gold G5420T
+Pentium(R) Gold G5500
+Pentium(R) Gold G5500T
+Pentium(R) Gold G5600
+Pentium(R) Gold G5600T
+Pentium(R) Gold G5620
 Pentium(R) Silver J5005
 Pentium(R) Silver N5000
 Pentium(R) CPU 4417U
 Pentium(R) CPU 5405U
+Pentium(R) Gold 4417U
+Pentium(R) Gold 5405U
 Pentium(R) Silver J5040
 Pentium(R) Silver N5030
+Pentium(R) Gold 6405U
+Pentium(R) Gold G6400
+Pentium(R) Gold G6400E
+Pentium(R) Gold G6400T
+Pentium(R) Gold G6400TE
+Pentium(R) Gold G6405
+Pentium(R) Gold G6405T
+Pentium(R) Gold G6500
+Pentium(R) Gold G6500T
+Pentium(R) Gold G6505
+Pentium(R) Gold G6505T
+Pentium(R) Gold G6600
+Pentium(R) Gold G6605
 Pentium(R) CPU 6405U
 Pentium(R) CPU G6400
 Pentium(R) CPU G6400E
@@ -500,6 +542,16 @@ Xeon(R) W-1290E
 Xeon(R) W-1290P
 Xeon(R) W-1290T
 Xeon(R) W-1290TE
+Xeon(R) W-2102
+Xeon(R) W-2104
+Xeon(R) W-2123
+Xeon(R) W-2125
+Xeon(R) W-2133
+Xeon(R) W-2135
+Xeon(R) W-2145
+Xeon(R) W-2155
+Xeon(R) W-2175
+Xeon(R) W-2195
 Xeon(R) Gold 5315Y
 Xeon(R) Gold 5317
 Xeon(R) Gold 5318N

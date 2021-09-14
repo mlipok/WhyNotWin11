@@ -1,6 +1,7 @@
 #include-once
 #include <File.au3>
 #include ".\_WMIC.au3"
+#include <WinAPIDiag.au3>
 
 Func _ArchCheck()
 	Select
@@ -9,9 +10,9 @@ Func _ArchCheck()
 		Case @CPUArch = "X64" And @OSArch = "X64"
 			Return True
 		Case @CPUArch = "X64" And @OSArch = "X86"
-			SetError(1, 0, False)
+			Return SetError(1, 0, False)
 		Case Else
-			SetError(2, 0, False)
+			Return SetError(2, 0, False)
 	EndSelect
 EndFunc   ;==>_ArchCheck
 
@@ -23,14 +24,15 @@ Func _BootCheck()
 		Case "Legacy"
 			Return False
 		Case Else
-			SetError(1, $sFirmware, False)
+			Return SetError(1, $sFirmware, False)
 	EndSwitch
 EndFunc   ;==>_BootCheck
 
-Func _CPUNameCheck($sCPU)
+Func _CPUNameCheck($sCPU, $sVersion)
 	Local $iLines, $sLine, $ListFile
 	Select
 		Case StringInStr($sCPU, "AMD")
+			If StringInStr($sCPU, "1600") And StringInStr($sVersion, "Version 2") Then Return True ; 1600AF
 			$ListFile = "\WhyNotWin11\SupportedProcessorsAMD.txt"
 		Case StringInStr($sCPU, "Intel")
 			$ListFile = "\WhyNotWin11\SupportedProcessorsIntel.txt"
@@ -47,10 +49,10 @@ Func _CPUNameCheck($sCPU)
 			$sLine = FileReadLine(@LocalAppDataDir & $ListFile, $iLine)
 			Select
 				Case @error
-					SetError(2, 0, False)
+					Return SetError(2, 0, False)
 					ExitLoop
 				Case $iLine = $iLines
-					SetError(3, 0, False)
+					Return SetError(3, 0, False)
 					ExitLoop
 				Case StringInStr($sCPU, $sLine)
 					Return True
@@ -69,23 +71,30 @@ Func _CPUCoresCheck($iCores, $iThreads)
 EndFunc   ;==>_CPUCoresCheck
 
 Func _CPUSpeedCheck()
-	If _GetCPUInfo(3) >= 1000 Then
-		Return True
-	Else
-		Return False
-	EndIf
+	Select
+		Case _GetCPUInfo(3) >= 1000
+			ContinueCase
+		Case RegRead("HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\CentralProcessor\0", "~MHz") >= 1000
+			Return True
+		Case Else
+			Return False
+	EndSelect
 EndFunc   ;==>_CPUSpeedCheck
 
 Func _DirectXStartCheck()
-	Local $aReturn[2]
+	Local $aReturn[3]
 	Local $hDXFile = _TempFile(@TempDir, "dxdiag")
 	$aReturn[0] = $hDXFile
 	$aReturn[1] = Run(@SystemDir & "\dxdiag.exe /whql:off /t " & $hDXFile)
+	$aReturn[2] = TimerInit()
 	Return $aReturn
 EndFunc   ;==>_DirectXStartCheck
 
-Func _GetDirectXCheck($aArray)
-	If Not ProcessExists($aArray[1]) And FileExists($aArray[0]) Then
+Func _GetDirectXCheck(ByRef $aArray)
+	If TimerDiff($aArray[2]) > 120000 Then
+		FileDelete($aArray[0])
+		Return SetError(0, 2, False)
+	ElseIf Not ProcessExists($aArray[1]) Then
 		Local $sDXFile = StringStripWS(StringStripCR(FileRead($aArray[0])), $STR_STRIPALL)
 		Select
 			Case StringInStr($sDXFile, "FeatureLevels:12") Or StringInStr($sDXFile, "DDIVersion:12") And StringInStr($sDXFile, "DriverModel:WDDM" & Chr(160) & "3") ; Non-English Languages
@@ -101,11 +110,11 @@ Func _GetDirectXCheck($aArray)
 			Case StringInStr($sDXFile, "FeatureLevels:12") Or StringInStr($sDXFile, "DDIVersion:12") And StringInStr($sDXFile, "DriverModel:WDDM2")
 				Return 1
 			Case Not StringInStr($sDXFile, "FeatureLevels:12") Or Not StringInStr($sDXFile, "DDIVersion:12") And StringInStr($sDXFile, "DriverModel:WDDM2")
-				SetError(1, 0, False)
+				Return SetError(1, 0, False)
 			Case StringInStr($sDXFile, "DDIVersion:12") And Not StringInStr($sDXFile, "DriverModel:WDDM2")
-				SetError(1, 0, False)
+				Return SetError(2, 0, False)
 			Case Else
-				Return False
+				Return SetError(0, 1, False)
 		EndSelect
 		FileDelete($aArray[0])
 	Else
@@ -126,29 +135,33 @@ Func _GPTCheck($aDisks)
 	Next
 EndFunc   ;==>_GPTCheck
 
-Func _MemCheck()
-	Local Static $aMem
+Func _InternetCheck()
+	Return _WinAPI_IsInternetConnected()
+EndFunc
 
-	If Not $aMem <> "" Then
-		$aMem = DllCall(@SystemDir & "\Kernel32.dll", "int", "GetPhysicallyInstalledSystemMemory", "int*", "")
+Func _MemCheck()
+	Local Static $vMem
+
+	If Not $vMem <> "" Then
+		$vMem = DllCall(@SystemDir & "\Kernel32.dll", "int", "GetPhysicallyInstalledSystemMemory", "int*", "")
 		If @error Then
-			$aMem = MemGetStats()
-			$aMem = Round($aMem[1] / 1048576, 1)
-			$aMem = Ceiling($aMem)
+			$vMem = MemGetStats()
+			$vMem = Round($vMem[1] / 1048576, 1)
+			$vMem = Ceiling($vMem)
 		Else
-			$aMem = Round($aMem[1] / 1048576, 1)
+			$vMem = Round($vMem[1] / 1048576, 1)
 		EndIf
-		If $aMem = 0 Then
-			$aMem = MemGetStats()
-			$aMem = Round($aMem[1] / 1048576, 1)
-			$aMem = Ceiling($aMem)
+		If $vMem = 0 Then
+			$vMem = MemGetStats()
+			$vMem = Round($vMem[1] / 1048576, 1)
+			$vMem = Ceiling($vMem)
 		EndIf
 	EndIf
 
-	If $aMem >= 4 Then
-		Return $aMem
+	If $vMem >= 4 Then
+		Return SetError($vMem, 0, True)
 	Else
-		Return False
+		Return SetError($vMem, 0, False)
 	EndIf
 EndFunc   ;==>_MemCheck
 
@@ -156,10 +169,10 @@ Func _SecureBootCheck()
 	Local $sSecureBoot = RegRead("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecureBoot\State", "UEFISecureBootEnabled")
 	If @error Then $sSecureBoot = 999
 	Switch $sSecureBoot
-		Case 0
-			Return True
 		Case 1
 			Return 2
+		Case 0
+			Return 1
 		Case Else
 			Return False
 	EndSwitch
@@ -186,20 +199,20 @@ EndFunc   ;==>_SpaceCheck
 Func _TPMCheck()
 	Select
 		Case Not IsAdmin() And _GetTPMInfo(0) = True
-			Return True
-		Case Not IsAdmin() And _GetTPMInfo <> True
-			Return False
+			Return SetError(Number(StringSplit(_GetTPMInfo(2), ", ", $STR_NOCOUNT)[0]), 0, True)
+		Case Not IsAdmin() And _GetTPMInfo(0) <> True
+			Return SetError(0, 0, False)
 		Case _GetTPMInfo(0) = False
 			ContinueCase
 		Case _GetTPMInfo(1) = False
-			Return False
+			Return SetError(0, 0, False)
 		Case Not Number(StringSplit(_GetTPMInfo(2), ", ", $STR_NOCOUNT)[0]) >= 1.2
-			SetError(1, 0, False) ; Under Version 1.2
+			Return SetError(1, 0, False) ; Under Version 1.2
 		Case _GetTPMInfo(0) = True And _GetTPMInfo(0) = True And Number(StringSplit(_GetTPMInfo(2), ", ", $STR_NOCOUNT)[0]) >= 2.0
-			Return True
+			Return SetError(Number(StringSplit(_GetTPMInfo(2), ", ", $STR_NOCOUNT)[0]), 0, True)
 		Case _GetTPMInfo(0) = True And _GetTPMInfo(0) = True And Number(StringSplit(_GetTPMInfo(2), ", ", $STR_NOCOUNT)[0]) >= 1.2
-			SetError(2, 0, False) ; Under Version 1.2 ????
+			Return SetError(2, 0, False) ; Under Version 1.2 ????
 		Case Else
-			Return False
+			Return SetError(0, 0, False)
 	EndSelect
 EndFunc   ;==>_TPMCheck

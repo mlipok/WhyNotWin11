@@ -9,8 +9,7 @@
 # WhyNotWin11
 Detection Script to help identify why your PC isn't Windows 11 Release Ready.
 
-![image](https://user-images.githubusercontent.com/716581/124361675-38706c00-dbfe-11eb-8524-4a767617f66f.png)
-
+![image](https://user-images.githubusercontent.com/716581/131174566-e5180290-0ad6-468c-b601-9ba0fafe24cb.png)
 ----
 
 ## Download
@@ -27,6 +26,8 @@ OS|Windows 8.1|Latest Windows 10 Build
 CPU|32-bit Single Core|64-bit Dual Core or Higher
 RAM (Memory)|40MB Free|100MB Free
 Disk (Storage)|5MB Free|100MB Free
+||
+Limitations|DirectX 12 Check Inaccurate|None
 
 ## Compiling
 
